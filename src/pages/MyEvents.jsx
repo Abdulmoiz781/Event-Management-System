@@ -18,26 +18,35 @@ export const MyEvents = () => {
   };
 
   const renderCard = (r, canCancel) => (
-    <div key={r.eventId}>
-      {r.image && <img src={r.image} alt={r.eventName} width="200" />}
-      <h3>{r.eventName}</h3>
-      <p>Date: {r.date}</p>
-      {r.venue && <p>Venue: {r.venue}</p>}
-      <Link to={`/events/${r.eventId}`}>View details</Link>
-      {canCancel && (
-        <button onClick={() => handleCancel(r.eventId)}>
-          Cancel registration
-        </button>
-      )}
+    <div key={r.eventId} className={`reg-card ${canCancel ? "" : "past"}`}>
+      {r.image && <img src={r.image} alt={r.eventName} />}
+      <div className="reg-info">
+        <h3>{r.eventName}</h3>
+        <p className="meta">📅 {r.date}</p>
+        {r.venue && <p className="meta">📍 {r.venue}</p>}
+        <div className="reg-actions">
+          <Link to={`/events/${r.eventId}`} className="btn-outline">
+            View details
+          </Link>
+          {canCancel && (
+            <button
+              className="btn-danger"
+              onClick={() => handleCancel(r.eventId)}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 
   return (
     <div>
-      <h1>My Events</h1>
+      <h1 className="page-title">My Events</h1>
 
       {mine.length === 0 && (
-        <p>
+        <p className="status">
           You haven't registered for any events yet.{" "}
           <Link to="/events">Browse events</Link>
         </p>
@@ -45,15 +54,19 @@ export const MyEvents = () => {
 
       {upcoming.length > 0 && (
         <section>
-          <h2>Upcoming</h2>
-          {upcoming.map((r) => renderCard(r, true))}
+          <h2 className="section-title">Upcoming</h2>
+          <div className="reg-list">
+            {upcoming.map((r) => renderCard(r, true))}
+          </div>
         </section>
       )}
 
       {completed.length > 0 && (
         <section>
-          <h2>Completed</h2>
-          {completed.map((r) => renderCard(r, false))}
+          <h2 className="section-title">Completed</h2>
+          <div className="reg-list">
+            {completed.map((r) => renderCard(r, false))}
+          </div>
         </section>
       )}
     </div>

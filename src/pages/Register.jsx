@@ -39,42 +39,52 @@ export const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Register Yourself</h1>
+    <div className="auth-card">
+      <h1>Create account</h1>
+      <p className="auth-subtitle">Sign up to register for events.</p>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Name: </label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          placeholder="Name..."
-          onChange={(e) => setName(e.target.value)}
-        />
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="field">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            placeholder="Your name"
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
 
-        <label htmlFor="email">Email: </label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          placeholder="Email..."
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div className="field">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            placeholder="you@example.com"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <label htmlFor="password">Password: </label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          placeholder="Password..."
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="field">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            placeholder="At least 6 characters"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-        {error && <p>{error}</p>}
+        {error && <p className="form-error">{error}</p>}
 
-        <button type="submit">Register</button>
+        <button type="submit" className="btn-large btn-full">
+          Register
+        </button>
       </form>
-      <p>
+
+      <p className="auth-switch">
         Already have an account? <Link to="/login">Login</Link>
       </p>
     </div>

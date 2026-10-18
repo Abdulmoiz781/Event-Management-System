@@ -34,8 +34,8 @@ export const EventDetails = () => {
     load();
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="status">Loading...</p>;
+  if (error) return <p className="status error">{error}</p>;
   if (!event) return null;
 
   const venue = event._embedded?.venues?.[0];
@@ -43,6 +43,9 @@ export const EventDetails = () => {
   const segment = event.classifications?.[0]?.segment?.name;
   const genre = event.classifications?.[0]?.genre?.name;
   const price = event.priceRanges?.[0];
+
+  const time = event.dates?.start?.localTime?.slice(0, 5);
+  const category = segment && segment !== "Undefined" ? segment : null;
 
   const eventDate = event.dates?.start?.localDate;
   const today = new Date().toISOString().split("T")[0];
@@ -76,55 +79,93 @@ export const EventDetails = () => {
   };
 
   return (
-    <div>
-      <Link to="/events">Back to events</Link>
+    <div className="details">
+      <Link to="/events" className="back-link">
+        ← Back to events
+      </Link>
 
-      <h1>{event.name}</h1>
-      {image && <img src={image} alt={event.name} width="400" />}
+      <div className="details-card">
+        {image && (
+          <div className="details-hero">
+            <img src={image} alt={event.name} />
+          </div>
+        )}
 
-      <p>
-        Date: {event.dates?.start?.localDate} {event.dates?.start?.localTime}
-      </p>
+        <div className="details-body">
+          {category && <span className="badge-inline">{category}</span>}
+          <h1>{event.name}</h1>
 
-      <p>
-        Venue: {venue?.name}
-        {venue?.city?.name ? `, ${venue.city.name}` : ""}
-        {venue?.country?.name ? `, ${venue.country.name}` : ""}
-      </p>
-      {venue?.address?.line1 && <p>Address: {venue.address.line1}</p>}
+          <div className="info-grid">
+            <div className="info-item">
+              <span className="info-label">📅 Date</span>
+              <span>
+                {eventDate} {time && `at ${time}`}
+              </span>
+            </div>
 
-      {segment && (
-        <p>
-          Category: {segment}
-          {genre && genre !== "Undefined" ? ` / ${genre}` : ""}
-        </p>
-      )}
+            <div className="info-item">
+              <span className="info-label">📍 Venue</span>
+              <span>
+                {venue?.name}
+                {venue?.city?.name ? `, ${venue.city.name}` : ""}
+                {venue?.country?.name ? `, ${venue.country.name}` : ""}
+              </span>
+            </div>
 
-      {price && (
-        <p>
-          Price: {price.min} - {price.max} {price.currency}
-        </p>
-      )}
+            {venue?.address?.line1 && (
+              <div className="info-item">
+                <span className="info-label">🏠 Address</span>
+                <span>{venue.address.line1}</span>
+              </div>
+            )}
 
-      {event.info && <p>{event.info}</p>}
+            {price && (
+              <div className="info-item">
+                <span className="info-label">💲 Price</span>
+                <span>
+                  {price.min} - {price.max} {price.currency}
+                </span>
+              </div>
+            )}
 
-      {event.url && (
-        <p>
-          <a href={event.url} target="_blank" rel="noreferrer">
-            View on Ticketmaster
-          </a>
-        </p>
-      )}
+            {genre && genre !== "Undefined" && (
+              <div className="info-item">
+                <span className="info-label">🎵 Genre</span>
+                <span>{genre}</span>
+              </div>
+            )}
+          </div>
 
-      {isPast ? (
-        <p>This event has already taken place.</p>
-      ) : isRegistered ? (
-        <button onClick={handleCancel}>Cancel registration</button>
-      ) : (
-        <button onClick={handleRegister}>Register</button>
-      )}
+          {event.info && <p className="details-info">{event.info}</p>}
 
-      {message && <p>{message}</p>}
+          <div className="details-actions">
+            {isPast ? (
+              <p className="status">This event has already taken place.</p>
+            ) : isRegistered ? (
+              <button className="btn-danger" onClick={handleCancel}>
+                Cancel registration
+              </button>
+            ) : (
+              <button className="btn-large" onClick={handleRegister}>
+                Register for this event
+              </button>
+            )}
+
+            {event.url && (
+              <a
+                href={event.url}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-outline"
+              >
+                View on Ticketmaster
+              </a>
+            )}
+          </div>
+
+          {message && <p className="success">{message}</p>}
+        </div>
+      </div>
     </div>
   );
 };

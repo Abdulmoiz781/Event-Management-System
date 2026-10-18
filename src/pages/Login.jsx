@@ -13,7 +13,8 @@ export const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => { // It wipes any old error left over from a previous visit
+  useEffect(() => {
+    // It wipes any old error left over from a previous visit
     dispatch(clearError());
   }, [dispatch]);
 
@@ -37,34 +38,42 @@ export const Login = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="auth-card">
+      <h1>Welcome back</h1>
+      <p className="auth-subtitle">Log in to manage your events.</p>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email: </label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          placeholder="Email..."
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="field">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            placeholder="you@example.com"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <label htmlFor="password">Password: </label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          placeholder="Password..."
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="field">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            placeholder="Your password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-        {error && <p>{error}</p>}
-        {authError && <p>{authError}</p>}
+        {error && <p className="form-error">{error}</p>}
+        {authError && <p className="form-error">{authError}</p>}
 
-        <button type="submit">Login</button>
+        <button type="submit" className="btn-large btn-full">
+          Login
+        </button>
       </form>
-      <p>
+
+      <p className="auth-switch">
         Don't have an account? <Link to="/register">Register</Link>
       </p>
     </div>
