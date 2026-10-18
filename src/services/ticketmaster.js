@@ -1,6 +1,8 @@
 const API_KEY = import.meta.env.VITE_TICKETMASTER_API_KEY;
 const BASE_URL = "https://app.ticketmaster.com/discovery/v2";
 
+const now = new Date().toISOString().split(".")[0] + "Z";
+
 export const fetchEvents = async ({
   keyword = "",
   city = "",
@@ -12,6 +14,7 @@ export const fetchEvents = async ({
     size: 20,
     page,
     sort: "date,asc",
+    startDateTime: now,
   });
 
   if (keyword) params.append("keyword", keyword);
