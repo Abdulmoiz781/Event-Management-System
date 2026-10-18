@@ -13,7 +13,7 @@ export const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  useEffect(() => { // It wipes any old error left over from a previous visit
     dispatch(clearError());
   }, [dispatch]);
 
