@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadEvents } from "../redux/eventsSlice";
+import { EventCard } from "../components/EventCard";
 
 const CATEGORIES = [
   "Music",
@@ -20,7 +20,6 @@ export const Events = () => {
   // what the user is typing
   const [keyword, setKeyword] = useState("");
   const [city, setCity] = useState("");
-  const [category, setCategory] = useState("");
 
   // what is actually applied to the search
   const [filters, setFilters] = useState({
@@ -38,18 +37,22 @@ export const Events = () => {
     e.preventDefault();
     setPage(0);
     setFilters({
+      ...filters,
       keyword: keyword.trim(),
       city: city.trim(),
-      classificationName: category,
     });
   };
 
   const handleClear = () => {
     setKeyword("");
     setCity("");
-    setCategory("");
     setPage(0);
     setFilters({ keyword: "", city: "", classificationName: "" });
+  };
+
+  const handleCategory = (c) => {
+    setPage(0);
+    setFilters({ ...filters, classificationName: c });
   };
 
   const maxPages = Math.min(totalPages, 50);
@@ -71,14 +74,25 @@ export const Events = () => {
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="">All categories</option>
+        <div>
+          <button
+            type="button"
+            onClick={() => handleCategory("")}
+            disabled={filters.classificationName === ""}
+          >
+            All
+          </button>
           {CATEGORIES.map((c) => (
-            <option key={c} value={c}>
+            <button
+              type="button"
+              key={c}
+              onClick={() => handleCategory(c)}
+              disabled={filters.classificationName === c}
+            >
               {c}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
         <button type="submit">Search</button>
         <button type="button" onClick={handleClear}>
           Clear
@@ -90,27 +104,9 @@ export const Events = () => {
       {!loading && !error && list.length === 0 && <p>No events found.</p>}
 
       <div>
-        {list.map((event) => {
-          const venue = event._embedded?.venues?.[0];
-          const image = event.images?.[0]?.url;
-          const type = event.classifications?.[0]?.segment?.name;
-
-          return (
-            <div key={event.id}>
-              {image && <img src={image} alt={event.name} width="200" />}
-              <h3>{event.name}</h3>
-              <p>
-                {event.dates?.start?.localDate} {event.dates?.start?.localTime}
-              </p>
-              <p>
-                {venue?.name}
-                {venue?.city?.name ? `, ${venue.city.name}` : ""}
-              </p>
-              {type && <p>{type}</p>}
-              <Link to={`/events/${event.id}`}>View details</Link>
-            </div>
-          );
-        })}
+        {list.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
       </div>
 
       {maxPages > 1 && (
